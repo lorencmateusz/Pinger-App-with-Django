@@ -2,6 +2,8 @@
 """
 Parse ping command results and save to database
 """
+from pinger.models import Ping
+from datetime import date
 
 
 def output_parser(cmd_output):
@@ -17,11 +19,11 @@ def output_parser(cmd_output):
     else:
         new_output["connected"] = False
         new_output["time"] = "n/a"
-    # save_results_to_db(new_output)
     return new_output
 
 
-# def save_results_to_db(ping_results):
-#     db.session.add(Ping(hostname=ping_results["hostname"], connected=ping_results["connected"],
-#                         avg_time=ping_results["time"], date=date.today()))
-#     db.session.commit()
+def save_results_to_db(cmd_results):
+    new_ping = Ping(hostname=cmd_results["hostname"], connected=cmd_results["connected"],
+                    avg_time=cmd_results["time"], date=date.today())
+    new_ping.save()
+

@@ -17,7 +17,9 @@ def ping_ips(request):
         for i in hostnames:
             cmd = os.popen(f"ping {i}").read()
             print(cmd)
-            results.append(pinger_helper.output_parser(cmd))
+            parsed_cmd_output = pinger_helper.output_parser(cmd)
+            results.append(parsed_cmd_output)
+            pinger_helper.save_results_to_db(parsed_cmd_output)
         print(results)
         return Response(results)
     except TypeError:
