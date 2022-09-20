@@ -20,13 +20,13 @@ from rest_framework import routers
 from challenges import views
 
 router = routers.DefaultRouter()
-# router.register(r'users', views.UserViewSet)
-# router.register(r'groups', views.GroupViewSet)
-101803380506
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+
 # auto url routing
 # plus login URL for browsable api
+
 urlpatterns = [
-    path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     # path('challenges/', include('challenges.urls'),

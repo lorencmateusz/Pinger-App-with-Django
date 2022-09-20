@@ -2,8 +2,10 @@ from pinger import pinger_helper
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import generics
 import os
 from datetime import date
+from pinger.models import Ping
 
 # Create your views here.
 
@@ -25,3 +27,23 @@ def ping_ips(request):
     except TypeError:
         return "make sure you used correct format - JSON {hosts: hostnames}"
 
+
+class PingList(generics.ListAPIView):
+    model = Ping
+
+    def get_queryset(self):
+        queryset = Ping.objects.all()
+        host = self.request.query_params.get('host')
+
+        if host:
+            queryset = queryset.filter(hostname=host)
+        return queryset
+
+
+@api_view(http_method_names=['GET'])
+def view_ping_history(request, queryset):
+
+    pings = queryset
+    return render(request, "history.html", {"pings": pings})
+
+# viewsets, serializers

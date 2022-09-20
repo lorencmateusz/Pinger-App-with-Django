@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ping history</title>
+</head>
+<body>
+<h1>Ping history:</h1>
+<ul>
+    {% for ping in pings %}
+        <li>{{  ping.hostname }} (Connected: {{ ping.connected }},
+        Avg. time: {{ ping.avg_time }},
+        Timestamp: {{ ping.date}})</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

@@ -27,3 +27,5 @@ def save_results_to_db(cmd_results):
                     avg_time=cmd_results["time"], date=date.today())
     new_ping.save()
 
+
+
