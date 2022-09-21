@@ -52,8 +52,18 @@ def view_ping_history(request, queryset):
 
 class HelloViewSet(viewsets.ViewSet):
     """Test api view"""
+    queryset = Ping.objects.all()
     serializer_class = serializers.PingerSerializer
+    hostname_separator = ','
 
+    def get_queryset(self):
+        hostnames = self.request.query_params.get('hostnames', None)
+        if hostnames:
+            qs = Ping.objects.filter()
+            for hostname in hostnames.split(self.hostname_separator):
+                qs = qs.filter(hostnames__name=hostname)
+
+            return qs
     def list(self, request):
         a_viewset = ['helllllllllllllo']
         return Response({'message': 'Hello!', 'a_viewset': a_viewset})
