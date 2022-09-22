@@ -21,7 +21,7 @@ class PingerProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ping = models.Ping.objects.create(
             hostname=validated_data['hostname'],
-            connected =validated_data['connected'],
+            connected=validated_data['connected'],
             avg_time=validated_data['avg_time'],
             date=validated_data['date']
         )

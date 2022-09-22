@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, viewsets, status
+from rest_framework import generics, viewsets, status, filters
 import os
 from datetime import date
 from pinger.models import Ping
@@ -84,5 +84,8 @@ class HelloViewSet(viewsets.ViewSet):
 class PingerProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PingerProfileSerializer
     queryset = models.Ping.objects.all()
+    filter_backends = (filters.OrderingFilter, filters.SearchFilter)
+    search_fields = ('hostname', 'date')
+
 
 
