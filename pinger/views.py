@@ -1,4 +1,4 @@
-from pinger import pinger_helper, serializers
+from pinger import pinger_helper, serializers, models
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -64,9 +64,8 @@ class HelloViewSet(viewsets.ViewSet):
                 qs = qs.filter(hostnames__name=hostname)
 
             return qs
-    def list(self, request):
-        a_viewset = ['helllllllllllllo']
-        return Response({'message': 'Hello!', 'a_viewset': a_viewset})
+    # def list(self, request):
+    #     return Response({'message': 'Hello!', 'a_viewset': qs)
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -81,5 +80,9 @@ class HelloViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
+class PingerProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.PingerProfileSerializer
+    queryset = models.Ping.objects.all()
 
 
