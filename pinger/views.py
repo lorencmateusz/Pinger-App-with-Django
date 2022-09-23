@@ -1,12 +1,15 @@
 from pinger import pinger_helper, serializers, models
 from django.shortcuts import render
 from rest_framework.decorators import api_view
+from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, viewsets, status, filters
+from rest_framework import permissions
 import os
 from datetime import date
 from pinger.models import Ping
+from pinger.serializers import UserSerializer, GroupSerializer
 
 # Create your views here.
 
@@ -27,6 +30,18 @@ def ping_ips(request):
         return Response(results)
     except TypeError:
         return "make sure you used correct format - JSON {hosts: hostnames}"
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class PingList(generics.ListAPIView):
