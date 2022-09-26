@@ -2,8 +2,28 @@
 """
 Parse ping command results and save to database
 """
+import os
+
+from rest_framework.response import Response
+
 from pinger.models import Ping
 from datetime import date
+
+
+def pinger_app(request):
+    results = []
+    print(request)
+    try:
+        for i in [request]:
+            cmd = os.popen(f"ping {i}").read()
+            print(cmd)
+            parsed_cmd_output = output_parser(cmd)
+            results.append(parsed_cmd_output)
+            save_results_to_db(parsed_cmd_output)
+        print(results)
+        return Response(results)
+    except TypeError:
+        return "make sure you used correct format - JSON {hosts: hostnames}"
 
 
 def output_parser(cmd_output):

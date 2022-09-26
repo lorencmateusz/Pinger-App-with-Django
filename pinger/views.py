@@ -1,6 +1,6 @@
 from pinger import pinger_helper, serializers, models
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -14,22 +14,23 @@ from pinger.serializers import UserSerializer, GroupSerializer
 # Create your views here.
 
 
-@api_view(http_method_names=['POST'])
-def ping_ips(request):
-    hostnames = request.data['hosts']
-    print(hostnames)
-    results = []
-    try:
-        for i in hostnames:
-            cmd = os.popen(f"ping {i}").read()
-            print(cmd)
-            parsed_cmd_output = pinger_helper.output_parser(cmd)
-            results.append(parsed_cmd_output)
-            pinger_helper.save_results_to_db(parsed_cmd_output)
-        print(results)
-        return Response(results)
-    except TypeError:
-        return "make sure you used correct format - JSON {hosts: hostnames}"
+class PingerViewSet(viewsets.ViewSet):
+    queryset = Ping.objects.all()
+    serializer_class = serializers.PingerAppSerializer
+    hostname_separator = ','
+
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            hostname = serializer.validated_data.get('hostname')
+            return pinger_helper.pinger_app(hostname)
+
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class UserViewSet(viewsets.ModelViewSet):

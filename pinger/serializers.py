@@ -11,6 +11,10 @@ class PingerSerializer(serializers.Serializer):
     date = serializers.DateTimeField()
 
 
+class PingerAppSerializer(serializers.Serializer):
+    hostname = serializers.CharField(max_length=10)
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
